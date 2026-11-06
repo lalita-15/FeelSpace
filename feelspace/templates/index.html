@@ -1,0 +1,520 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FeelSpace | Your Emotional Space</title>
+
+    <meta name="description"
+        content="A beautiful and safe space to express your thoughts, feelings and emotions.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ================================
+         NAVIGATION
+    ================================= -->
+
+    <header class="navbar">
+
+        <a href="#home" class="logo">
+            <span class="logo-icon">✦</span>
+            FeelSpace
+        </a>
+
+        <nav class="nav-links">
+            <a href="#home" class="active">Home</a>
+            <a href="#share">Share Thoughts</a>
+            <a href="#community">Community</a>
+        </nav>
+
+        <div class="nav-user-section">
+
+            {% if session.get('user_id') %}
+
+                <div class="nav-profile"
+                     title="{{ session.get('username') }}">
+
+                    <span class="profile-icon">
+                        {{ session.get('username', 'L')[0]|upper }}
+                    </span>
+
+                </div>
+
+                <span class="nav-username">
+                    {{ session.get('username') }}
+                </span>
+
+                <form action="{{ url_for('logout') }}" method="POST">
+
+                    <button type="submit" class="logout-btn">
+                        Logout
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}" class="nav-auth-link">
+                    Login
+                </a>
+
+                <a href="{{ url_for('signup') }}" class="nav-auth-btn">
+                    Sign Up
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </header>
+
+
+    <!-- ================================
+         MAIN CONTENT
+    ================================= -->
+
+    <main class="main-container" id="home">
+
+
+        <!-- ================================
+             HERO SECTION
+        ================================= -->
+
+        <section class="hero-section">
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    ✨ YOUR PERSONAL SPACE
+                </span>
+
+                <h1>
+                    Every emotion
+                    <span>deserves a voice.</span>
+                </h1>
+
+                <p>
+                    Life is made of little moments and countless emotions.
+                    Take a breath, express yourself and find a space
+                    where every feeling matters.
+                </p>
+
+                <a href="#share" class="primary-btn">
+                    Share your feelings
+                    <span>→</span>
+                </a>
+
+                <div class="hero-note">
+                    <span>♡</span>
+                    A safe space to be yourself.
+                </div>
+
+            </div>
+
+
+            <div class="hero-decoration">
+
+                <div class="glow-circle"></div>
+
+                <div class="floating-star star-one">✦</div>
+                <div class="floating-star star-two">✧</div>
+                <div class="floating-star star-three">✦</div>
+
+                <div class="quote-card">
+
+                    <span class="quote-label">
+                        A LITTLE REMINDER
+                    </span>
+
+                    <div class="quote-emoji">🌷</div>
+
+                    <h3>
+                        You don't have to be okay every day.
+                    </h3>
+
+                    <p>
+                        Give yourself permission to feel.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================
+             MOOD SECTION
+        ================================= -->
+
+        <section class="mood-section" id="mood">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        EMOTIONAL CHECK-IN
+                    </span>
+
+                    <h2>
+                        How are you feeling today?
+                    </h2>
+
+                    <p class="section-description">
+                        Choose the emoji that describes your mood.
+                        There is no right or wrong feeling.
+                    </p>
+
+                </div>
+
+                <span class="mood-note">
+                    Every feeling matters ♡
+                </span>
+
+            </div>
+
+
+            <div class="mood-options">
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Happy"
+                    data-emoji="😊"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-name">Happy</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Sad"
+                    data-emoji="😢"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😢</span>
+                    <span class="mood-name">Sad</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Excited"
+                    data-emoji="🤩"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">🤩</span>
+                    <span class="mood-name">Excited</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Anxious"
+                    data-emoji="😰"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😰</span>
+                    <span class="mood-name">Anxious</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Loved"
+                    data-emoji="🥰"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">🥰</span>
+                    <span class="mood-name">Loved</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Calm"
+                    data-emoji="😌"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😌</span>
+                    <span class="mood-name">Calm</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Motivated"
+                    data-emoji="🔥"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">🔥</span>
+                    <span class="mood-name">Motivated</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Tired"
+                    data-emoji="😴"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😴</span>
+                    <span class="mood-name">Tired</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Grateful"
+                    data-emoji="🥹"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">🥹</span>
+                    <span class="mood-name">Grateful</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Confused"
+                    data-emoji="😕"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😕</span>
+                    <span class="mood-name">Confused</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Confident"
+                    data-emoji="😎"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">😎</span>
+                    <span class="mood-name">Confident</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mood-option"
+                    data-mood="Lonely"
+                    data-emoji="🫂"
+                    aria-pressed="false">
+
+                    <span class="mood-emoji">🫂</span>
+                    <span class="mood-name">Lonely</span>
+
+                </button>
+
+            </div>
+
+
+            <p class="mood-selection-hint" id="mood-hint">
+                Select a mood to continue 💜
+            </p>
+
+        </section>
+
+
+        <!-- ================================
+             THOUGHT SHARING SECTION
+        ================================= -->
+
+        <section class="share-section" id="share">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        YOUR VOICE MATTERS
+                    </span>
+
+                    <h2>
+                        What's on your mind?
+                    </h2>
+
+                    <p class="section-description">
+                        Your thoughts deserve to be heard.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="thought-card">
+
+                <div class="thought-card-heading">
+
+                    <span class="writing-icon">✍️</span>
+
+                    <div>
+                        <h3>Your personal journal</h3>
+                        <p>Write freely. This is your space.</p>
+                    </div>
+
+                </div>
+
+
+                <label for="thought-content">
+                    Express yourself freely.
+                </label>
+
+                <textarea
+                    id="thought-content"
+                    placeholder="What's happening in your heart and mind today?"
+                    maxlength="2000"
+                ></textarea>
+
+
+                <div class="form-footer">
+
+                    <label class="anonymous-option">
+
+                        <input type="checkbox" id="anonymous">
+
+                        <span>Share anonymously</span>
+
+                    </label>
+
+
+                    <button type="button"
+                        id="share-btn"
+                        class="primary-btn">
+
+                        Post your thought →
+
+                    </button>
+
+                </div>
+
+
+                <p id="form-message"
+                    class="form-message"
+                    aria-live="polite"></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================
+             COMMUNITY SECTION
+        ================================= -->
+
+        <section class="community-section" id="community">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        A SPACE FOR EVERYONE
+                    </span>
+
+                    <h2>
+                        Community thoughts
+                    </h2>
+
+                    <p class="section-description">
+                        Little pieces of feelings shared by people like you.
+                    </p>
+
+                </div>
+
+
+                <button type="button"
+                    id="refresh-btn"
+                    class="secondary-btn">
+
+                    ↻ Refresh
+
+                </button>
+
+            </div>
+
+
+            <div id="thoughts-container"
+                class="thoughts-container">
+
+                <div class="empty-state">
+
+                    <span class="empty-emoji">💜</span>
+
+                    <h3>
+                        Your community is waiting.
+                    </h3>
+
+                    <p>
+                        Be the first to share a little piece of your heart.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================================
+         FOOTER
+    ================================= -->
+
+    <footer class="footer">
+
+        <div class="logo">
+            <span class="logo-icon">✦</span>
+            FeelSpace
+        </div>
+
+        <p>
+            A little space to feel, express and connect.
+        </p>
+
+        <span class="copyright">
+            © 2026 FeelSpace. Made with care ♡
+        </span>
+
+    </footer>
+
+
+    <!-- ================================
+         JAVASCRIPT
+    ================================= -->
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>

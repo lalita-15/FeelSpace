@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | FeelSpace</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="auth-page">
+
+    <main class="auth-card">
+
+        <a href="/" class="logo auth-logo">
+            <span class="logo-icon">✦</span>
+            FeelSpace
+        </a>
+
+        <div class="auth-heading">
+            <span class="eyebrow">WELCOME BACK</span>
+            <h1>Good to see you again.</h1>
+            <p>Sign in to your personal emotional space.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="auth-message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" class="primary-btn auth-submit">
+                Login to FeelSpace →
+            </button>
+
+        </form>
+
+        <p class="auth-switch">
+            New to FeelSpace?
+            <a href="{{ url_for('signup') }}">Create an account</a>
+        </p>
+
+        <a href="/" class="auth-back">← Back to FeelSpace</a>
+
+    </main>
+
+</body>
+</html>
