@@ -1,0 +1,49 @@
+
+services:
+  web:
+    build: .
+    container_name: feelspace-app
+
+    ports:
+      - "5002:5000"
+
+    env_file:
+      - ../.env
+
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+  db:
+    image: postgres:18
+    container_name: feelspace-db
+
+    ports:
+      - "5433:5432"
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: feelspace_db
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - feelspace-postgres-data:/var/lib/postgresql
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d feelspace_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    restart: unless-stopped
+
+volumes:
+  feelspace-postgres-data:
+    external: true
+    name: feelspace-postgres-data

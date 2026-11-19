@@ -28,3 +28,6 @@ Thumbs.db
 # Test cache
 .pytest_cache/
 .coverage
+# Database backups
+*.dump
+*.backup
