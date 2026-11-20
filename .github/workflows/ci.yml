@@ -3,13 +3,21 @@ name: FeelSpace CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
+    name: Run FeelSpace Tests
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: feelspace
 
     steps:
       - name: Checkout repository
