@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Run FeelSpace Tests
@@ -39,27 +42,54 @@ jobs:
         run: |
           python -m pytest tests/ -v
 
-  docker:
-    name: Build and Push Docker Image
+  build-and-deploy:
+    name: Build, Push to ECR and Deploy to EKS
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Configure AWS Credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v6
-        with:
-          context: ./feelspace
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/feelspace:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/feelspace:${{ github.sha }}
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: feelspace
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./feelspace
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Configure kubectl
+        run: |
+          aws eks update-kubeconfig \
+            --region ${{ vars.AWS_REGION }} \
+            --name FeelSpace-EKS-Cluster
+
+      - name: Deploy to EKS
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          kubectl set image deployment/feelspace-app \
+            feelspace=$ECR_REGISTRY/feelspace:$IMAGE_TAG \
+            -n feelspace
+
+          kubectl rollout status deployment/feelspace-app \
+            -n feelspace \
+            --timeout=180s

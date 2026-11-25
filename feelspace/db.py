@@ -19,7 +19,8 @@ def get_db_connection():
         port=os.getenv("DB_PORT", "5432"),
         dbname=os.getenv("DB_NAME", "feelspace_db"),
         user=os.getenv("DB_USER", "postgres"),
-        password=db_password
+        password=db_password,
+        sslmode="require"
     )
 
     return conn
