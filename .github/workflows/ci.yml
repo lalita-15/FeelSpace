@@ -44,7 +44,9 @@ jobs:
 
   build-and-deploy:
     name: Build, Push to ECR and Deploy to EKS
-    runs-on: ubuntu-latest
+
+    runs-on: [self-hosted, linux, x64]
+
     needs: test
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -56,39 +58,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # TEMPORARY: Debug GitHub OIDC claims
-      - name: Debug OIDC Claims
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          curl -sS \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" |
-          python -c '
-          import sys
-          import json
-          import base64
-
-          token = sys.stdin.read().strip()
-          payload = token.split(".")[1]
-          payload += "=" * (-len(payload) % 4)
-
-          data = json.loads(
-              base64.urlsafe_b64decode(payload)
-          )
-
-          print(json.dumps({
-              "sub": data.get("sub"),
-              "aud": data.get("aud"),
-              "repository": data.get("repository"),
-              "repository_id": data.get("repository_id"),
-              "repository_owner": data.get("repository_owner"),
-              "repository_owner_id": data.get("repository_owner_id"),
-              "ref": data.get("ref")
-          }, indent=2))
-          '
 
       - name: Configure AWS Credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
