@@ -374,7 +374,7 @@ These are future improvements and are not presented as completed implementations
 
 **FeelSpace Application:**
 
-http://k8s-feelspac-feelspac-35b29a7c3f-2097529575.ap-south-1.elb.amazonaws.com
+**Live Application:** [Launch FeelSpace](http://k8s-feelspac-feelspac-35b29a7c3f-2097529575.ap-south-1.elb.amazonaws.com)
 
 *Note: This is an AWS-hosted endpoint. Availability depends on the AWS infrastructure remaining active.*
 
