@@ -31,3 +31,9 @@ Thumbs.db
 # Database backups
 *.dump
 *.backup
+
+# Temporary AWS GitHub Runner configurations
+runner-launch.json
+runner-network.json
+runner-storage.json
+runner-trust-policy.json

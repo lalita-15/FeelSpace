@@ -1,0 +1,49 @@
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: feelspace-resource-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: feelspace.resource.alerts
+      rules:
+        - alert: FeelSpaceHighCPU
+          expr: |
+            (
+              sum by (namespace, pod) (
+                rate(container_cpu_usage_seconds_total{
+                  namespace="feelspace",
+                  container="feelspace"
+                }[5m])
+              )
+              /
+              0.1
+            ) > 0.8
+          for: 5m
+          labels:
+            severity: warning
+            app: feelspace
+          annotations:
+            summary: "FeelSpace CPU usage is high"
+            description: "FeelSpace Pod {{ $labels.pod }} CPU usage is above 80% of its 100m CPU request for 5 minutes."
+
+        - alert: FeelSpaceHighMemory
+          expr: |
+            (
+              container_memory_working_set_bytes{
+                namespace="feelspace",
+                container="feelspace"
+              }
+              /
+              536870912
+            ) > 0.8
+          for: 5m
+          labels:
+            severity: warning
+            app: feelspace
+          annotations:
+            summary: "FeelSpace memory usage is high"
+            description: "FeelSpace Pod {{ $labels.pod }} memory usage is above 80% of its 512Mi memory limit for 5 minutes."
